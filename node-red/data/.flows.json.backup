@@ -1,0 +1,67 @@
+[
+    {
+        "id": "3e299705e9cae72b",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "fd60666d80240521",
+        "type": "http in",
+        "z": "3e299705e9cae72b",
+        "name": "Dog",
+        "url": "dog",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 210,
+        "y": 140,
+        "wires": [
+            [
+                "997316342541a1fd"
+            ]
+        ]
+    },
+    {
+        "id": "d78bdbd86444eb33",
+        "type": "http response",
+        "z": "3e299705e9cae72b",
+        "name": "DogResponse",
+        "statusCode": "201",
+        "headers": {
+            "x-header": "asdf"
+        },
+        "x": 700,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "997316342541a1fd",
+        "type": "change",
+        "z": "3e299705e9cae72b",
+        "name": "HelloWorld",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "whazaaaaaup",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 420,
+        "y": 120,
+        "wires": [
+            [
+                "d78bdbd86444eb33"
+            ]
+        ]
+    }
+]
