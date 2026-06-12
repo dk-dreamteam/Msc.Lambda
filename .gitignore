@@ -2,3 +2,8 @@ node-red/data/node_modules
 node-red/data/.npm*
 **/invocations_per_function_md.anon.d01.csv
 sparkdir/jars/aws-java-sdk-bundle-1.12.262.jar
+node-red/data/datasets/cleaned_http_invocations.json
+node-red/data/datasets/cleaned_orchestration_invocations.json
+node-red/data/datasets/cleaned_queue_invocations.json
+node-red/data/datasets/cleaned_storage_invocations.json
+node-red/data/datasets/cleaned_timer_invocations.json

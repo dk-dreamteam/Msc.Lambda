@@ -8,17 +8,9 @@
         "env": []
     },
     {
-        "id": "4531295c81729e66",
-        "type": "tab",
-        "label": "Flow 1",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
         "id": "96b9cec355a795e1",
         "type": "tab",
-        "label": "Flow 1",
+        "label": "Flow dg",
         "disabled": false,
         "info": "",
         "env": []
@@ -86,351 +78,6 @@
         ]
     },
     {
-        "id": "be1cb08bde4897d2",
-        "type": "inject",
-        "z": "4531295c81729e66",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 240,
-        "y": 160,
-        "wires": [
-            [
-                "64fc1192c14e5ca5",
-                "543e514f15860812"
-            ]
-        ]
-    },
-    {
-        "id": "d58c53dd5e191af4",
-        "type": "inject",
-        "z": "4531295c81729e66",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 280,
-        "y": 620,
-        "wires": [
-            [
-                "e65050d6eb591a22"
-            ]
-        ]
-    },
-    {
-        "id": "e65050d6eb591a22",
-        "type": "exec",
-        "z": "4531295c81729e66",
-        "command": "ls /data/datasets",
-        "addpay": "",
-        "append": "",
-        "useSpawn": "false",
-        "timer": "",
-        "winHide": false,
-        "oldrc": false,
-        "name": "",
-        "x": 520,
-        "y": 680,
-        "wires": [
-            [
-                "01de4fe1abbd2884"
-            ],
-            [],
-            []
-        ]
-    },
-    {
-        "id": "01de4fe1abbd2884",
-        "type": "debug",
-        "z": "4531295c81729e66",
-        "name": "debug 1",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 720,
-        "y": 720,
-        "wires": []
-    },
-    {
-        "id": "64fc1192c14e5ca5",
-        "type": "file in",
-        "z": "4531295c81729e66",
-        "name": "",
-        "filename": "/data/datasets/invocations_per_function_md.anon.d01.csv",
-        "filenameType": "str",
-        "format": "lines",
-        "chunk": false,
-        "sendError": false,
-        "encoding": "none",
-        "allProps": true,
-        "x": 410,
-        "y": 360,
-        "wires": [
-            [
-                "250a8a973728f96c"
-            ]
-        ]
-    },
-    {
-        "id": "250a8a973728f96c",
-        "type": "csv",
-        "z": "4531295c81729e66",
-        "name": "",
-        "spec": "rfc",
-        "sep": ",",
-        "hdrin": true,
-        "hdrout": "none",
-        "multi": "one",
-        "ret": "\\r\\n",
-        "temp": "",
-        "skip": "0",
-        "strings": true,
-        "include_empty_strings": "",
-        "include_null_values": "",
-        "x": 630,
-        "y": 460,
-        "wires": [
-            [
-                "619925805360c60d"
-            ]
-        ]
-    },
-    {
-        "id": "619925805360c60d",
-        "type": "function",
-        "z": "4531295c81729e66",
-        "name": "function 1",
-        "func": "// 1. ΕΛΕΓΧΟΣ ΓΙΑ ΤΟ ΤΕΛΟΣ ΤΟΥ ΑΡΧΕΙΟΥ (Empty payload)\nif (!msg.payload || msg.payload === \"\" || (typeof msg.payload === 'object' && Object.keys(msg.payload).length === 0)) {\n    // Μόλις το αρχείο τελειώσει, στέλνουμε το σήμα FINISHED στην Έξοδο 2 (κάτω)\n    return [null, { payload: \"FINISHED\" }];\n}\n\nlet row = msg.payload;\n\n// Προστασία: Αν για κάποιο λόγο περάσει η επικεφαλίδα ως object, αγνόησέ τη\nif (row.HashApp === \"HashApp\" || !row.HashApp) {\n    return null;\n}\n\nlet totalInvocations = 0;\n\n// 2. ΑΘΡΟΙΣΜΑ: Αθροίζουμε τις κλήσεις από το λεπτό 1 έως το 1440\nfor (let i = 1; i <= 1440; i++) {\n    let value = parseInt(row[i.toString()]);\n    if (!isNaN(value)) {\n        totalInvocations += value;\n    }\n}\n\n// 3. ΚΡΙΤΗΡΙΟ ΦΙΛΤΡΑΡΙΣΜΑΤΟΣ: Κρατάμε όσα functions είχαν πάνω από 15 κλήσεις τη μέρα\nif (totalInvocations > 15) {\n    msg.payload = {\n        HashApp: row.HashApp,\n        HashFunction: row.HashFunction,\n        Trigger: row.Trigger,\n        TotalDailyInvocations: totalInvocations\n    };\n    \n    // Στέλνουμε το φιλτραρισμένο object στην Έξοδο 1 (πάνω) για το write file\n    return [msg, null];\n}\n\nreturn null;",
-        "outputs": 2,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 780,
-        "y": 520,
-        "wires": [
-            [
-                "c7c70510ac10c4f0",
-                "7ccd6e831c700f66"
-            ],
-            [
-                "df2a148448e69aeb",
-                "7cf1334613862e77"
-            ]
-        ]
-    },
-    {
-        "id": "c7c70510ac10c4f0",
-        "type": "file",
-        "z": "4531295c81729e66",
-        "name": "",
-        "filename": "/data/datasets/cleaned_invocations.json",
-        "filenameType": "str",
-        "appendNewline": true,
-        "createDir": true,
-        "overwriteFile": "false",
-        "encoding": "none",
-        "x": 1120,
-        "y": 500,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "df2a148448e69aeb",
-        "type": "file in",
-        "z": "4531295c81729e66",
-        "name": "",
-        "filename": "/data/datasets/cleaned_invocations.json",
-        "filenameType": "str",
-        "format": "",
-        "chunk": false,
-        "sendError": false,
-        "encoding": "none",
-        "allProps": false,
-        "x": 1120,
-        "y": 560,
-        "wires": [
-            [
-                "3d11d24e25edf062",
-                "9bd0373ee0e29a48"
-            ]
-        ]
-    },
-    {
-        "id": "3d11d24e25edf062",
-        "type": "function",
-        "z": "4531295c81729e66",
-        "name": "function 2",
-        "func": "// Το msg.payload περιέχει ήδη όλο το καθαρό κείμενο JSON από τον προηγούμενο κόμβο\n\n// Ορίζουμε το όνομα που θέλουμε να πάρει το αρχείο ΜΕΣΑ στο MinIO\nmsg.filename = \"azure-cleaned-invocation.json\"; \n\n// Βάζουμε τα μεταδεδομένα που ζητάει ο καθηγητής\nmsg.headers = {\n    \"X-Amz-Meta-Source\": \"AzureFunctionsDataset2019\",\n    \"X-Amz-Meta-Status\": \"Unprocessed\", // Ο Spark θα ψάχνει αρχεία με status 'Unprocessed'\n    \"X-Amz-Meta-ProcessedBy\": \"Node-RED-Pipeline\"\n};\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1440,
-        "y": 620,
-        "wires": [
-            [
-                "e907a64ad98f015f",
-                "3b559b14a4dd7774"
-            ]
-        ]
-    },
-    {
-        "id": "e907a64ad98f015f",
-        "type": "amazon s3 put",
-        "z": "4531295c81729e66",
-        "aws": "0225efcf2cf07547",
-        "bucket": "azure-functions-raw",
-        "filename": "",
-        "localFilename": "",
-        "contentType": "",
-        "contentEncoding": "",
-        "region": "",
-        "isBase64": "",
-        "name": "",
-        "acl": "",
-        "outputs": 1,
-        "x": 1620,
-        "y": 700,
-        "wires": [
-            [
-                "92e6c2c0f12a4a85"
-            ]
-        ]
-    },
-    {
-        "id": "543e514f15860812",
-        "type": "debug",
-        "z": "4531295c81729e66",
-        "name": "debug 2",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 500,
-        "y": 140,
-        "wires": []
-    },
-    {
-        "id": "7cf1334613862e77",
-        "type": "debug",
-        "z": "4531295c81729e66",
-        "name": "debug 5",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1020,
-        "y": 420,
-        "wires": []
-    },
-    {
-        "id": "9bd0373ee0e29a48",
-        "type": "debug",
-        "z": "4531295c81729e66",
-        "name": "debug 6",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1480,
-        "y": 480,
-        "wires": []
-    },
-    {
-        "id": "3b559b14a4dd7774",
-        "type": "debug",
-        "z": "4531295c81729e66",
-        "name": "debug 7",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1640,
-        "y": 560,
-        "wires": []
-    },
-    {
-        "id": "92e6c2c0f12a4a85",
-        "type": "debug",
-        "z": "4531295c81729e66",
-        "name": "debug 8",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1780,
-        "y": 620,
-        "wires": []
-    },
-    {
-        "id": "7ccd6e831c700f66",
-        "type": "debug",
-        "z": "4531295c81729e66",
-        "name": "debug 9",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 820,
-        "y": 320,
-        "wires": []
-    },
-    {
         "id": "6f37892fd7f19829",
         "type": "inject",
         "z": "96b9cec355a795e1",
@@ -451,12 +98,12 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 240,
-        "y": 160,
+        "x": 160,
+        "y": 240,
         "wires": [
             [
-                "f71381ce96c175fd",
-                "0b6ee214a31477d5"
+                "0b6ee214a31477d5",
+                "f118c486277a3dd2"
             ]
         ]
     },
@@ -540,8 +187,8 @@
         "sendError": false,
         "encoding": "none",
         "allProps": true,
-        "x": 410,
-        "y": 360,
+        "x": 630,
+        "y": 400,
         "wires": [
             [
                 "df646d4db046cc24"
@@ -564,8 +211,8 @@
         "strings": true,
         "include_empty_strings": "",
         "include_null_values": "",
-        "x": 630,
-        "y": 460,
+        "x": 890,
+        "y": 480,
         "wires": [
             [
                 "805442b89b275099"
@@ -576,39 +223,23 @@
         "id": "805442b89b275099",
         "type": "function",
         "z": "96b9cec355a795e1",
-        "name": "function 1",
-        "func": "// 1. ΕΛΕΓΧΟΣ ΓΙΑ ΤΟ ΤΕΛΟΣ ΤΟΥ ΑΡΧΕΙΟΥ (Empty payload)\nif (!msg.payload || msg.payload === \"\" || (typeof msg.payload === 'object' && Object.keys(msg.payload).length === 0)) {\n    // Μόλις το αρχείο τελειώσει, στέλνουμε το σήμα FINISHED στην Έξοδο 2 (κάτω)\n    return [{ payload: \"FINISHED\" }, null, null, null, null, null];\n}\n\nlet row = msg.payload;\n\n// Προστασία: Αν για κάποιο λόγο περάσει η επικεφαλίδα ως object, αγνόησέ τη\nif (row.HashApp === \"HashApp\" || !row.HashApp) {\n    return null;\n}\n\nlet totalInvocations = 0;\n\n// 2. ΑΘΡΟΙΣΜΑ: Αθροίζουμε τις κλήσεις από το λεπτό 1 έως το 1440\nfor (let i = 1; i <= 1440; i++) {\n    let value = parseInt(row[i.toString()]);\n    if (!isNaN(value)) {\n        totalInvocations += value;\n    }\n}\n\n// 3. ΚΡΙΤΗΡΙΟ ΦΙΛΤΡΑΡΙΣΜΑΤΟΣ: Κρατάμε όσα functions είχαν πάνω από 15 κλήσεις τη μέρα\nif (totalInvocations > 15) {\n    if(row.Trigger == \"http\"){\n        msg.payload = {\n                    HashApp: row.HashApp,\n                    HashFunction: row.HashFunction,\n                    Trigger: row.Trigger,\n                    TotalDailyInvocations: totalInvocations\n                };\n            \n        // Στέλνουμε το φιλτραρισμένο object στην Έξοδο 1 (πάνω) για το write file\n        return [null, msg, null, null, null, null];\n    }\n\n    if(row.Trigger == \"queue\"){\n        msg.payload = {\n                    HashApp: row.HashApp,\n                    HashFunction: row.HashFunction,\n                    Trigger: row.Trigger,\n                    TotalDailyInvocations: totalInvocations\n                };\n            \n        // Στέλνουμε το φιλτραρισμένο object στην Έξοδο 1 (πάνω) για το write file\n        return [null, null, msg, null, null, null];\n    }\n\n    if(row.Trigger == \"orchestration\"){\n        msg.payload = {\n                    HashApp: row.HashApp,\n                    HashFunction: row.HashFunction,\n                    Trigger: row.Trigger,\n                    TotalDailyInvocations: totalInvocations\n                };\n            \n        // Στέλνουμε το φιλτραρισμένο object στην Έξοδο 1 (πάνω) για το write file\n        return [null, null, null, msg, null, null];\n    }\n\n    if(row.Trigger == \"timer\"){\n        msg.payload = {\n            HashApp: row.HashApp,\n            HashFunction: row.HashFunction,\n            Trigger: row.Trigger,\n            TotalDailyInvocations: totalInvocations\n        };\n    \n        // Στέλνουμε το φιλτραρισμένο object στην Έξοδο 1 (πάνω) για το write file\n        return [null, null, null, null, msg, null];\n    }\n    \n\n    if(row.Trigger == \"storage\"){\n        msg.payload = {\n            HashApp: row.HashApp,\n            HashFunction: row.HashFunction,\n            Trigger: row.Trigger,\n            TotalDailyInvocations: totalInvocations\n        };\n    \n        // Στέλνουμε το φιλτραρισμένο object στην Έξοδο 1 (πάνω) για το write file\n        return [null, null, null, null, null, msg];\n    }\n}\n\nreturn null;",
-        "outputs": 6,
+        "name": "filtering data",
+        "func": "// 1. Check for end of file or empty payload\nif (!msg.payload || msg.payload === \"\" || (typeof msg.payload === 'object' && Object.keys(msg.payload).length === 0)) {\n    // Send FINISHED to Output 2\n    return [{ payload: \"FINISHED\" }, null];\n}\n\nconst row = msg.payload;\n\n// 2. Skip header row or invalid data\nif (!row.HashApp || row.HashApp === \"HashApp\") {\n    return null;\n}\n\n// 3. Sum daily invocations\nlet totalInvocations = 0;\nfor (let i = 1; i <= 1440; i++) {\n    const value = parseInt(row[i], 10);\n    if (!isNaN(value)) {\n        totalInvocations += value;\n    }\n}\n\n// 4. Filter and assign dynamic local path\nif (totalInvocations > 15) {\n    const validTriggers = ['http', 'queue', 'orchestration', 'timer', 'storage'];\n\n    if (validTriggers.includes(row.Trigger)) {\n        // Dynamically set local file path for the next node\n        msg.filename = `/data/datasets/cleaned_${row.Trigger}_invocations.json`;\n\n        msg.payload = {\n            HashApp: row.HashApp,\n            HashFunction: row.HashFunction,\n            Trigger: row.Trigger,\n            TotalDailyInvocations: totalInvocations\n        };\n\n        // Send data row to Output 1\n        return [null, msg];\n    }\n}\n\nreturn null;",
+        "outputs": 2,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 780,
-        "y": 520,
+        "x": 1050,
+        "y": 540,
         "wires": [
             [
                 "6facc07263f98194",
-                "484c51b8b6029e31",
-                "669d4cf5e3fa88f9",
-                "e818a2b5c5f6f958",
-                "c2686033dfd134e8",
-                "95d948d87026a3eb"
+                "ac8a9be8cb7bbf6f"
             ],
             [
                 "1138526d78699b1c"
-            ],
-            [
-                "f26a710e74149456"
-            ],
-            [
-                "df165544c9b1ed8c"
-            ],
-            [
-                "768f74e0b70f3bdd"
-            ],
-            [
-                "f924ef1a5b64920a"
             ]
         ]
     },
@@ -617,14 +248,14 @@
         "type": "file",
         "z": "96b9cec355a795e1",
         "name": "",
-        "filename": "/data/datasets/cleaned_http_invocations.json",
-        "filenameType": "str",
+        "filename": "filename",
+        "filenameType": "msg",
         "appendNewline": true,
         "createDir": true,
         "overwriteFile": "false",
         "encoding": "none",
-        "x": 1130,
-        "y": 720,
+        "x": 1300,
+        "y": 580,
         "wires": [
             []
         ]
@@ -634,14 +265,14 @@
         "type": "file in",
         "z": "96b9cec355a795e1",
         "name": "",
-        "filename": "/data/datasets/cleaned_http_invocations.json",
-        "filenameType": "str",
+        "filename": "filename",
+        "filenameType": "msg",
         "format": "",
         "chunk": false,
         "sendError": false,
         "encoding": "none",
         "allProps": false,
-        "x": 1150,
+        "x": 1600,
         "y": 460,
         "wires": [
             [
@@ -654,16 +285,16 @@
         "id": "a73e0112de16f259",
         "type": "function",
         "z": "96b9cec355a795e1",
-        "name": "function 2",
-        "func": "// Το msg.payload περιέχει ήδη όλο το καθαρό κείμενο JSON από τον προηγούμενο κόμβο\n\n// Ορίζουμε το όνομα που θέλουμε να πάρει το αρχείο ΜΕΣΑ στο MinIO\nmsg.filename = \"azure-cleaned-http-invocation.json\"; \n\n// Βάζουμε τα μεταδεδομένα που ζητάει ο καθηγητής\nmsg.headers = {\n    \"X-Amz-Meta-Source\": \"AzureFunctionsDataset2019\",\n    \"X-Amz-Meta-Status\": \"Unprocessed\", // Ο Spark θα ψάχνει αρχεία με status 'Unprocessed'\n    \"X-Amz-Meta-ProcessedBy\": \"Node-RED-Pipeline\"\n};\n\nreturn msg;",
+        "name": "storage prep",
+        "func": "// 1. Set the target S3 object name using the property we passed along\nmsg.filename = msg.minioFilename;\n\n// 2. Add required metadata headers\nmsg.headers = {\n    \"X-Amz-Meta-Source\": \"AzureFunctionsDataset2019\",\n    \"X-Amz-Meta-Status\": \"Unprocessed\", \n    \"X-Amz-Meta-ProcessedBy\": \"Node-RED-Pipeline\"\n};\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1520,
-        "y": 440,
+        "x": 1830,
+        "y": 540,
         "wires": [
             [
                 "44158e5d54da2eb8",
@@ -686,7 +317,7 @@
         "name": "",
         "acl": "",
         "outputs": 1,
-        "x": 1820,
+        "x": 2060,
         "y": 660,
         "wires": [
             [
@@ -706,8 +337,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 500,
-        "y": 140,
+        "x": 380,
+        "y": 180,
         "wires": []
     },
     {
@@ -723,8 +354,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1040,
-        "y": 420,
+        "x": 1200,
+        "y": 400,
         "wires": []
     },
     {
@@ -739,8 +370,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1540,
-        "y": 360,
+        "x": 1820,
+        "y": 400,
         "wires": []
     },
     {
@@ -755,8 +386,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1720,
-        "y": 400,
+        "x": 2020,
+        "y": 460,
         "wires": []
     },
     {
@@ -771,235 +402,83 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1940,
-        "y": 600,
+        "x": 2240,
+        "y": 580,
         "wires": []
     },
     {
-        "id": "f26a710e74149456",
-        "type": "file",
+        "id": "ac8a9be8cb7bbf6f",
+        "type": "function",
         "z": "96b9cec355a795e1",
-        "name": "",
-        "filename": "/data/datasets/cleaned_queue_invocations.json",
-        "filenameType": "str",
-        "appendNewline": true,
-        "createDir": true,
-        "overwriteFile": "false",
-        "encoding": "none",
-        "x": 1140,
-        "y": 760,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "df165544c9b1ed8c",
-        "type": "file",
-        "z": "96b9cec355a795e1",
-        "name": "",
-        "filename": "/data/datasets/cleaned_orchestration_invocations.json",
-        "filenameType": "str",
-        "appendNewline": true,
-        "createDir": true,
-        "overwriteFile": "false",
-        "encoding": "none",
-        "x": 1160,
-        "y": 800,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "768f74e0b70f3bdd",
-        "type": "file",
-        "z": "96b9cec355a795e1",
-        "name": "",
-        "filename": "/data/datasets/cleaned_timer_invocations.json",
-        "filenameType": "str",
-        "appendNewline": true,
-        "createDir": true,
-        "overwriteFile": "false",
-        "encoding": "none",
-        "x": 1140,
-        "y": 840,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "f924ef1a5b64920a",
-        "type": "file",
-        "z": "96b9cec355a795e1",
-        "name": "",
-        "filename": "/data/datasets/cleaned_storage_invocations.json",
-        "filenameType": "str",
-        "appendNewline": true,
-        "createDir": true,
-        "overwriteFile": "false",
-        "encoding": "none",
-        "x": 1140,
-        "y": 880,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "669d4cf5e3fa88f9",
-        "type": "file in",
-        "z": "96b9cec355a795e1",
-        "name": "",
-        "filename": "/data/datasets/cleaned_queue_invocations.json",
-        "filenameType": "str",
-        "format": "",
-        "chunk": false,
-        "sendError": false,
-        "encoding": "none",
-        "allProps": false,
-        "x": 1160,
+        "name": "generate read list",
+        "func": "// 1. Define all the trigger types we processed\nconst triggers = ['http', 'queue', 'orchestration', 'timer', 'storage'];\n\n// 2. Create a message for each file path\nconst fileMessages = triggers.map(type => {\n    return {\n        filename: `/data/datasets/cleaned_${type}_invocations.json`,\n        minioFilename: `azure-cleaned-${type}-invocation.json`\n    };\n});\n\n// 3. Output them sequentially to the next node\nreturn [fileMessages];",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1350,
         "y": 500,
         "wires": [
             [
-                "89cb9646b27362eb"
+                "484c51b8b6029e31",
+                "7450b92b6579d5cd"
             ]
         ]
     },
     {
-        "id": "e818a2b5c5f6f958",
-        "type": "file in",
+        "id": "7450b92b6579d5cd",
+        "type": "debug",
+        "z": "96b9cec355a795e1",
+        "name": "debug 10",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1520,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "f118c486277a3dd2",
+        "type": "function",
+        "z": "96b9cec355a795e1",
+        "name": "prep delete files",
+        "func": "// 1. List all 5 files that need a reset\nconst triggers = ['http', 'queue', 'orchestration', 'timer', 'storage'];\n\nconst deleteMessages = triggers.map(type => {\n    return {\n        filename: `/data/datasets/cleaned_${type}_invocations.json`\n    };\n});\n\n// 2. Output 5 individual messages to the delete node\nreturn [deleteMessages];",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 260,
+        "wires": [
+            [
+                "e4ce8558ef6a264e"
+            ]
+        ]
+    },
+    {
+        "id": "e4ce8558ef6a264e",
+        "type": "file",
         "z": "96b9cec355a795e1",
         "name": "",
-        "filename": "/data/datasets/cleaned_orchestration_invocations.json",
-        "filenameType": "str",
-        "format": "",
-        "chunk": false,
-        "sendError": false,
+        "filename": "filename",
+        "filenameType": "msg",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "delete",
         "encoding": "none",
-        "allProps": false,
-        "x": 1180,
-        "y": 540,
+        "x": 570,
+        "y": 300,
         "wires": [
             [
-                "998d7443b0dac57d"
-            ]
-        ]
-    },
-    {
-        "id": "c2686033dfd134e8",
-        "type": "file in",
-        "z": "96b9cec355a795e1",
-        "name": "",
-        "filename": "/data/datasets/cleaned_timer_invocations.json",
-        "filenameType": "str",
-        "format": "",
-        "chunk": false,
-        "sendError": false,
-        "encoding": "none",
-        "allProps": false,
-        "x": 1160,
-        "y": 580,
-        "wires": [
-            [
-                "3c53ae9f6b452a32"
-            ]
-        ]
-    },
-    {
-        "id": "95d948d87026a3eb",
-        "type": "file in",
-        "z": "96b9cec355a795e1",
-        "name": "",
-        "filename": "/data/datasets/cleaned_storage_invocations.json",
-        "filenameType": "str",
-        "format": "",
-        "chunk": false,
-        "sendError": false,
-        "encoding": "none",
-        "allProps": false,
-        "x": 1160,
-        "y": 620,
-        "wires": [
-            [
-                "13323c6111de56be"
-            ]
-        ]
-    },
-    {
-        "id": "89cb9646b27362eb",
-        "type": "function",
-        "z": "96b9cec355a795e1",
-        "name": "function 3",
-        "func": "// Το msg.payload περιέχει ήδη όλο το καθαρό κείμενο JSON από τον προηγούμενο κόμβο\n\n// Ορίζουμε το όνομα που θέλουμε να πάρει το αρχείο ΜΕΣΑ στο MinIO\nmsg.filename = \"azure-cleaned-queue-invocation.json\"; \n\n// Βάζουμε τα μεταδεδομένα που ζητάει ο καθηγητής\nmsg.headers = {\n    \"X-Amz-Meta-Source\": \"AzureFunctionsDataset2019\",\n    \"X-Amz-Meta-Status\": \"Unprocessed\", // Ο Spark θα ψάχνει αρχεία με status 'Unprocessed'\n    \"X-Amz-Meta-ProcessedBy\": \"Node-RED-Pipeline\"\n};\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1520,
-        "y": 480,
-        "wires": [
-            [
-                "44158e5d54da2eb8"
-            ]
-        ]
-    },
-    {
-        "id": "998d7443b0dac57d",
-        "type": "function",
-        "z": "96b9cec355a795e1",
-        "name": "function 4",
-        "func": "// Το msg.payload περιέχει ήδη όλο το καθαρό κείμενο JSON από τον προηγούμενο κόμβο\n\n// Ορίζουμε το όνομα που θέλουμε να πάρει το αρχείο ΜΕΣΑ στο MinIO\nmsg.filename = \"azure-cleaned-orchestration-invocation.json\"; \n\n// Βάζουμε τα μεταδεδομένα που ζητάει ο καθηγητής\nmsg.headers = {\n    \"X-Amz-Meta-Source\": \"AzureFunctionsDataset2019\",\n    \"X-Amz-Meta-Status\": \"Unprocessed\", // Ο Spark θα ψάχνει αρχεία με status 'Unprocessed'\n    \"X-Amz-Meta-ProcessedBy\": \"Node-RED-Pipeline\"\n};\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1520,
-        "y": 520,
-        "wires": [
-            [
-                "44158e5d54da2eb8"
-            ]
-        ]
-    },
-    {
-        "id": "3c53ae9f6b452a32",
-        "type": "function",
-        "z": "96b9cec355a795e1",
-        "name": "function 5",
-        "func": "// Το msg.payload περιέχει ήδη όλο το καθαρό κείμενο JSON από τον προηγούμενο κόμβο\n\n// Ορίζουμε το όνομα που θέλουμε να πάρει το αρχείο ΜΕΣΑ στο MinIO\nmsg.filename = \"azure-cleaned-timer-invocation.json\"; \n\n// Βάζουμε τα μεταδεδομένα που ζητάει ο καθηγητής\nmsg.headers = {\n    \"X-Amz-Meta-Source\": \"AzureFunctionsDataset2019\",\n    \"X-Amz-Meta-Status\": \"Unprocessed\", // Ο Spark θα ψάχνει αρχεία με status 'Unprocessed'\n    \"X-Amz-Meta-ProcessedBy\": \"Node-RED-Pipeline\"\n};\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1520,
-        "y": 560,
-        "wires": [
-            [
-                "44158e5d54da2eb8"
-            ]
-        ]
-    },
-    {
-        "id": "13323c6111de56be",
-        "type": "function",
-        "z": "96b9cec355a795e1",
-        "name": "function 6",
-        "func": "// Το msg.payload περιέχει ήδη όλο το καθαρό κείμενο JSON από τον προηγούμενο κόμβο\n\n// Ορίζουμε το όνομα που θέλουμε να πάρει το αρχείο ΜΕΣΑ στο MinIO\nmsg.filename = \"azure-cleaned-storage-invocation.json\"; \n\n// Βάζουμε τα μεταδεδομένα που ζητάει ο καθηγητής\nmsg.headers = {\n    \"X-Amz-Meta-Source\": \"AzureFunctionsDataset2019\",\n    \"X-Amz-Meta-Status\": \"Unprocessed\", // Ο Spark θα ψάχνει αρχεία με status 'Unprocessed'\n    \"X-Amz-Meta-ProcessedBy\": \"Node-RED-Pipeline\"\n};\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1520,
-        "y": 600,
-        "wires": [
-            [
-                "44158e5d54da2eb8"
+                "f71381ce96c175fd"
             ]
         ]
     }
