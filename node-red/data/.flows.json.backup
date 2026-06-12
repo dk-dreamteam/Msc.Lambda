@@ -1,24 +1,8 @@
 [
     {
-        "id": "3e299705e9cae72b",
-        "type": "tab",
-        "label": "Flow kk",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
-        "id": "4531295c81729e66",
-        "type": "tab",
-        "label": "Flow 1",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
         "id": "96b9cec355a795e1",
         "type": "tab",
-        "label": "Flow 1",
+        "label": "Flow dg",
         "disabled": false,
         "info": "",
         "env": []
@@ -29,395 +13,9 @@
         "sslenabled": true
     },
     {
-        "id": "fd60666d80240521",
-        "type": "http in",
-        "z": "3e299705e9cae72b",
-        "name": "Dog",
-        "url": "dog",
-        "method": "get",
-        "upload": false,
-        "swaggerDoc": "",
-        "x": 210,
-        "y": 140,
-        "wires": [
-            [
-                "997316342541a1fd"
-            ]
-        ]
-    },
-    {
-        "id": "d78bdbd86444eb33",
-        "type": "http response",
-        "z": "3e299705e9cae72b",
-        "name": "DogResponse",
-        "statusCode": "201",
-        "headers": {
-            "x-header": "asdf"
-        },
-        "x": 700,
-        "y": 320,
-        "wires": []
-    },
-    {
-        "id": "997316342541a1fd",
-        "type": "change",
-        "z": "3e299705e9cae72b",
-        "name": "HelloWorld",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "whazaaaaaup",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 420,
-        "y": 120,
-        "wires": [
-            [
-                "d78bdbd86444eb33"
-            ]
-        ]
-    },
-    {
-        "id": "be1cb08bde4897d2",
-        "type": "inject",
-        "z": "4531295c81729e66",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 240,
-        "y": 160,
-        "wires": [
-            [
-                "64fc1192c14e5ca5",
-                "543e514f15860812"
-            ]
-        ]
-    },
-    {
-        "id": "d58c53dd5e191af4",
-        "type": "inject",
-        "z": "4531295c81729e66",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 280,
-        "y": 620,
-        "wires": [
-            [
-                "e65050d6eb591a22"
-            ]
-        ]
-    },
-    {
-        "id": "e65050d6eb591a22",
-        "type": "exec",
-        "z": "4531295c81729e66",
-        "command": "ls /data/datasets",
-        "addpay": "",
-        "append": "",
-        "useSpawn": "false",
-        "timer": "",
-        "winHide": false,
-        "oldrc": false,
-        "name": "",
-        "x": 520,
-        "y": 680,
-        "wires": [
-            [
-                "01de4fe1abbd2884"
-            ],
-            [],
-            []
-        ]
-    },
-    {
-        "id": "01de4fe1abbd2884",
+        "id": "43ac24f860723712",
         "type": "debug",
-        "z": "4531295c81729e66",
-        "name": "debug 1",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 720,
-        "y": 720,
-        "wires": []
-    },
-    {
-        "id": "64fc1192c14e5ca5",
-        "type": "file in",
-        "z": "4531295c81729e66",
-        "name": "",
-        "filename": "/data/datasets/invocations_per_function_md.anon.d01.csv",
-        "filenameType": "str",
-        "format": "lines",
-        "chunk": false,
-        "sendError": false,
-        "encoding": "none",
-        "allProps": true,
-        "x": 410,
-        "y": 360,
-        "wires": [
-            [
-                "250a8a973728f96c"
-            ]
-        ]
-    },
-    {
-        "id": "250a8a973728f96c",
-        "type": "csv",
-        "z": "4531295c81729e66",
-        "name": "",
-        "spec": "rfc",
-        "sep": ",",
-        "hdrin": true,
-        "hdrout": "none",
-        "multi": "one",
-        "ret": "\\r\\n",
-        "temp": "",
-        "skip": "0",
-        "strings": true,
-        "include_empty_strings": "",
-        "include_null_values": "",
-        "x": 630,
-        "y": 460,
-        "wires": [
-            [
-                "619925805360c60d"
-            ]
-        ]
-    },
-    {
-        "id": "619925805360c60d",
-        "type": "function",
-        "z": "4531295c81729e66",
-        "name": "function 1",
-        "func": "// 1. ΕΛΕΓΧΟΣ ΓΙΑ ΤΟ ΤΕΛΟΣ ΤΟΥ ΑΡΧΕΙΟΥ (Empty payload)\nif (!msg.payload || msg.payload === \"\" || (typeof msg.payload === 'object' && Object.keys(msg.payload).length === 0)) {\n    // Μόλις το αρχείο τελειώσει, στέλνουμε το σήμα FINISHED στην Έξοδο 2 (κάτω)\n    return [null, { payload: \"FINISHED\" }];\n}\n\nlet row = msg.payload;\n\n// Προστασία: Αν για κάποιο λόγο περάσει η επικεφαλίδα ως object, αγνόησέ τη\nif (row.HashApp === \"HashApp\" || !row.HashApp) {\n    return null;\n}\n\nlet totalInvocations = 0;\n\n// 2. ΑΘΡΟΙΣΜΑ: Αθροίζουμε τις κλήσεις από το λεπτό 1 έως το 1440\nfor (let i = 1; i <= 1440; i++) {\n    let value = parseInt(row[i.toString()]);\n    if (!isNaN(value)) {\n        totalInvocations += value;\n    }\n}\n\n// 3. ΚΡΙΤΗΡΙΟ ΦΙΛΤΡΑΡΙΣΜΑΤΟΣ: Κρατάμε όσα functions είχαν πάνω από 15 κλήσεις τη μέρα\nif (totalInvocations > 15) {\n    msg.payload = {\n        HashApp: row.HashApp,\n        HashFunction: row.HashFunction,\n        Trigger: row.Trigger,\n        TotalDailyInvocations: totalInvocations\n    };\n    \n    // Στέλνουμε το φιλτραρισμένο object στην Έξοδο 1 (πάνω) για το write file\n    return [msg, null];\n}\n\nreturn null;",
-        "outputs": 2,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 780,
-        "y": 520,
-        "wires": [
-            [
-                "c7c70510ac10c4f0",
-                "7ccd6e831c700f66"
-            ],
-            [
-                "df2a148448e69aeb",
-                "7cf1334613862e77"
-            ]
-        ]
-    },
-    {
-        "id": "c7c70510ac10c4f0",
-        "type": "file",
-        "z": "4531295c81729e66",
-        "name": "",
-        "filename": "/data/datasets/cleaned_invocations.json",
-        "filenameType": "str",
-        "appendNewline": true,
-        "createDir": true,
-        "overwriteFile": "false",
-        "encoding": "none",
-        "x": 1120,
-        "y": 500,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "df2a148448e69aeb",
-        "type": "file in",
-        "z": "4531295c81729e66",
-        "name": "",
-        "filename": "/data/datasets/cleaned_invocations.json",
-        "filenameType": "str",
-        "format": "",
-        "chunk": false,
-        "sendError": false,
-        "encoding": "none",
-        "allProps": false,
-        "x": 1120,
-        "y": 560,
-        "wires": [
-            [
-                "3d11d24e25edf062",
-                "9bd0373ee0e29a48"
-            ]
-        ]
-    },
-    {
-        "id": "3d11d24e25edf062",
-        "type": "function",
-        "z": "4531295c81729e66",
-        "name": "function 2",
-        "func": "// Το msg.payload περιέχει ήδη όλο το καθαρό κείμενο JSON από τον προηγούμενο κόμβο\n\n// Ορίζουμε το όνομα που θέλουμε να πάρει το αρχείο ΜΕΣΑ στο MinIO\nmsg.filename = \"azure-cleaned-invocation.json\"; \n\n// Βάζουμε τα μεταδεδομένα που ζητάει ο καθηγητής\nmsg.headers = {\n    \"X-Amz-Meta-Source\": \"AzureFunctionsDataset2019\",\n    \"X-Amz-Meta-Status\": \"Unprocessed\", // Ο Spark θα ψάχνει αρχεία με status 'Unprocessed'\n    \"X-Amz-Meta-ProcessedBy\": \"Node-RED-Pipeline\"\n};\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1440,
-        "y": 620,
-        "wires": [
-            [
-                "e907a64ad98f015f",
-                "3b559b14a4dd7774"
-            ]
-        ]
-    },
-    {
-        "id": "e907a64ad98f015f",
-        "type": "amazon s3 put",
-        "z": "4531295c81729e66",
-        "aws": "0225efcf2cf07547",
-        "bucket": "azure-functions-raw",
-        "filename": "",
-        "localFilename": "",
-        "contentType": "",
-        "contentEncoding": "",
-        "region": "",
-        "isBase64": "",
-        "name": "",
-        "acl": "",
-        "outputs": 1,
-        "x": 1620,
-        "y": 700,
-        "wires": [
-            [
-                "92e6c2c0f12a4a85"
-            ]
-        ]
-    },
-    {
-        "id": "543e514f15860812",
-        "type": "debug",
-        "z": "4531295c81729e66",
-        "name": "debug 2",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 500,
-        "y": 140,
-        "wires": []
-    },
-    {
-        "id": "7cf1334613862e77",
-        "type": "debug",
-        "z": "4531295c81729e66",
-        "name": "debug 5",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1020,
-        "y": 420,
-        "wires": []
-    },
-    {
-        "id": "9bd0373ee0e29a48",
-        "type": "debug",
-        "z": "4531295c81729e66",
-        "name": "debug 6",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1480,
-        "y": 480,
-        "wires": []
-    },
-    {
-        "id": "3b559b14a4dd7774",
-        "type": "debug",
-        "z": "4531295c81729e66",
-        "name": "debug 7",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1640,
-        "y": 560,
-        "wires": []
-    },
-    {
-        "id": "92e6c2c0f12a4a85",
-        "type": "debug",
-        "z": "4531295c81729e66",
-        "name": "debug 8",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1780,
-        "y": 620,
-        "wires": []
-    },
-    {
-        "id": "7ccd6e831c700f66",
-        "type": "debug",
-        "z": "4531295c81729e66",
+        "z": "96b9cec355a795e1",
         "name": "debug 9",
         "active": true,
         "tosidebar": true,
@@ -426,8 +24,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 820,
-        "y": 320,
+        "x": 800,
+        "y": 360,
         "wires": []
     },
     {
@@ -834,5 +432,95 @@
                 "f71381ce96c175fd"
             ]
         ]
+    },
+    {
+        "id": "d852631d67540ae7",
+        "type": "inject",
+        "z": "96b9cec355a795e1",
+        "name": "Hourly Trigger",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "3600",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 760,
+        "wires": [
+            [
+                "616f273da6342a5e"
+            ]
+        ]
+    },
+    {
+        "id": "616f273da6342a5e",
+        "type": "function",
+        "z": "96b9cec355a795e1",
+        "name": "Build Payload",
+        "func": "msg.payload = {\n    action: \"CreateSubmissionRequest\",\n    appResource: \"/opt/spark/scripts/spark_kmeans_http.py\",\n    clientSparkVersion: \"4.1.2\",\n    mainClass: \"org.apache.spark.deploy.PythonRunner\",\n    appArgs: [\"/opt/spark/scripts/spark_kmeans_http.py\", \"\"],\n    environmentVariables: {},\n    sparkProperties: {\n        \"spark.master\": \"spark://spark-master:7077\",\n        \"spark.submit.deployMode\": \"client\",\n        \"spark.app.name\": \"KMeans_http\",\n        \"spark.driver.extraJavaOptions\": \"-Divy.cache.dir=/tmp/ivy -Divy.home=/tmp/ivy\",\n        \"spark.jars\": \"/opt/spark/external_jars/hadoop-aws-3.3.4.jar,/opt/spark/external_jars/aws-java-sdk-bundle-1.12.262.jar\"\n    }\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 860,
+        "wires": [
+            [
+                "351355caf30d87b4"
+            ]
+        ]
+    },
+    {
+        "id": "351355caf30d87b4",
+        "type": "http request",
+        "z": "96b9cec355a795e1",
+        "name": "Spark REST API",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://spark-master:6066/v1/submissions/create",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 340,
+        "y": 940,
+        "wires": [
+            [
+                "ec08f035eb961b86"
+            ]
+        ]
+    },
+    {
+        "id": "ec08f035eb961b86",
+        "type": "debug",
+        "z": "96b9cec355a795e1",
+        "name": "Job Output",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 430,
+        "y": 1020,
+        "wires": []
     }
 ]

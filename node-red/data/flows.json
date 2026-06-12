@@ -1,13 +1,5 @@
 [
     {
-        "id": "3e299705e9cae72b",
-        "type": "tab",
-        "label": "Flow kk",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
         "id": "96b9cec355a795e1",
         "type": "tab",
         "label": "Flow dg",
@@ -21,61 +13,20 @@
         "sslenabled": true
     },
     {
-        "id": "fd60666d80240521",
-        "type": "http in",
-        "z": "3e299705e9cae72b",
-        "name": "Dog",
-        "url": "dog",
-        "method": "get",
-        "upload": false,
-        "swaggerDoc": "",
-        "x": 210,
-        "y": 140,
-        "wires": [
-            [
-                "997316342541a1fd"
-            ]
-        ]
-    },
-    {
-        "id": "d78bdbd86444eb33",
-        "type": "http response",
-        "z": "3e299705e9cae72b",
-        "name": "DogResponse",
-        "statusCode": "201",
-        "headers": {
-            "x-header": "asdf"
-        },
-        "x": 700,
-        "y": 320,
+        "id": "43ac24f860723712",
+        "type": "debug",
+        "z": "96b9cec355a795e1",
+        "name": "debug 9",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 800,
+        "y": 360,
         "wires": []
-    },
-    {
-        "id": "997316342541a1fd",
-        "type": "change",
-        "z": "3e299705e9cae72b",
-        "name": "HelloWorld",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "whazaaaaaup",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 420,
-        "y": 120,
-        "wires": [
-            [
-                "d78bdbd86444eb33"
-            ]
-        ]
     },
     {
         "id": "6f37892fd7f19829",
@@ -476,6 +427,125 @@
         "encoding": "none",
         "x": 570,
         "y": 300,
+        "wires": [
+            [
+                "f71381ce96c175fd"
+            ]
+        ]
+    },
+    {
+        "id": "d852631d67540ae7",
+        "type": "inject",
+        "z": "96b9cec355a795e1",
+        "name": "Hourly Trigger",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "3600",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 760,
+        "wires": [
+            [
+                "616f273da6342a5e"
+            ]
+        ]
+    },
+    {
+        "id": "616f273da6342a5e",
+        "type": "function",
+        "z": "96b9cec355a795e1",
+        "name": "Build Payload",
+        "func": "msg.payload = {\n    action: \"CreateSubmissionRequest\",\n    appResource: \"/opt/spark/scripts/spark_kmeans_http.py\",\n    clientSparkVersion: \"4.1.2\",\n    mainClass: \"org.apache.spark.deploy.PythonRunner\",\n    appArgs: [\"/opt/spark/scripts/spark_kmeans_http.py\", \"\"],\n    environmentVariables: {},\n    sparkProperties: {\n        \"spark.master\": \"spark://spark-master:7077\",\n        \"spark.submit.deployMode\": \"client\",\n        \"spark.app.name\": \"KMeans_http\",\n        \"spark.driver.extraJavaOptions\": \"-Divy.cache.dir=/tmp/ivy -Divy.home=/tmp/ivy\",\n        \"spark.jars\": \"/opt/spark/external_jars/hadoop-aws-3.3.4.jar,/opt/spark/external_jars/aws-java-sdk-bundle-1.12.262.jar\"\n    }\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 860,
+        "wires": [
+            [
+                "351355caf30d87b4"
+            ]
+        ]
+    },
+    {
+        "id": "351355caf30d87b4",
+        "type": "http request",
+        "z": "96b9cec355a795e1",
+        "name": "Spark REST API",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://spark-master:6066/v1/submissions/create",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 340,
+        "y": 940,
+        "wires": [
+            [
+                "ec08f035eb961b86"
+            ]
+        ]
+    },
+    {
+        "id": "ec08f035eb961b86",
+        "type": "debug",
+        "z": "96b9cec355a795e1",
+        "name": "Job Output",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 430,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "b97a67698e7ddad6",
+        "type": "inject",
+        "z": "96b9cec355a795e1",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 240,
+        "y": 400,
         "wires": [
             [
                 "f71381ce96c175fd"

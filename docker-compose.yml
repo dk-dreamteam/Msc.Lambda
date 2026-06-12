@@ -51,6 +51,7 @@ services:
       ports:
         - "8080:8080"
         - "7077:7077"
+        - "6066:6066"
       #entrypoint: ["/opt/spark/sbin/start-master.sh"]
       command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.master.Master"]
       volumes:
