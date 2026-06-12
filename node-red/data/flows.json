@@ -395,26 +395,6 @@
         "wires": []
     },
     {
-        "id": "f118c486277a3dd2",
-        "type": "function",
-        "z": "96b9cec355a795e1",
-        "name": "prep delete files",
-        "func": "// 1. List all 5 files that need a reset\nconst triggers = ['http', 'queue', 'orchestration', 'timer', 'storage'];\n\nconst deleteMessages = triggers.map(type => {\n    return {\n        filename: `/data/datasets/cleaned_${type}_invocations.json`\n    };\n});\n\n// 2. Output 5 individual messages to the delete node\nreturn [deleteMessages];",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 380,
-        "y": 260,
-        "wires": [
-            [
-                "e4ce8558ef6a264e"
-            ]
-        ]
-    },
-    {
         "id": "e4ce8558ef6a264e",
         "type": "file",
         "z": "96b9cec355a795e1",
@@ -467,8 +447,8 @@
         "type": "function",
         "z": "96b9cec355a795e1",
         "name": "Build Payload",
-        "func": "msg.payload = {\n    action: \"CreateSubmissionRequest\",\n    appResource: \"/opt/spark/scripts/spark_kmeans_http.py\",\n    clientSparkVersion: \"4.1.2\",\n    mainClass: \"org.apache.spark.deploy.PythonRunner\",\n    appArgs: [\"/opt/spark/scripts/spark_kmeans_http.py\", \"\"],\n    environmentVariables: {},\n    sparkProperties: {\n        \"spark.master\": \"spark://spark-master:7077\",\n        \"spark.submit.deployMode\": \"client\",\n        \"spark.app.name\": \"KMeans_http\",\n        \"spark.driver.extraJavaOptions\": \"-Divy.cache.dir=/tmp/ivy -Divy.home=/tmp/ivy\",\n        \"spark.jars\": \"/opt/spark/external_jars/hadoop-aws-3.3.4.jar,/opt/spark/external_jars/aws-java-sdk-bundle-1.12.262.jar\"\n    }\n};\nreturn msg;",
-        "outputs": 1,
+        "func": "const triggers = ['http', 'queue', 'orchestration', 'timer', 'storage'];\n\nreturn triggers.map(t => {\n    const script = `spark_kmeans_${t}.py`;\n    return {\n        payload: {\n            action: \"CreateSubmissionRequest\",\n            appResource: `/opt/spark/scripts/${script}`,\n            clientSparkVersion: \"4.1.2\",\n            mainClass: \"org.apache.spark.deploy.PythonRunner\",\n            appArgs: [`/opt/spark/scripts/${script}`, \"\"],\n            environmentVariables: {},\n            sparkProperties: {\n                \"spark.master\": \"spark://spark-master:7077\",\n                \"spark.submit.deployMode\": \"cluster\",\n                \"spark.app.name\": `KMeans_${t}`,\n                \"spark.driver.extraJavaOptions\": \"-Divy.cache.dir=/tmp/ivy -Divy.home=/tmp/ivy\",\n                \"spark.jars\": \"/opt/spark/external_jars/hadoop-aws-3.3.4.jar,/opt/spark/external_jars/aws-java-sdk-bundle-1.12.262.jar\"\n            }\n        }\n    };\n});",
+        "outputs": 5,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
@@ -477,6 +457,18 @@
         "x": 260,
         "y": 860,
         "wires": [
+            [
+                "351355caf30d87b4"
+            ],
+            [
+                "351355caf30d87b4"
+            ],
+            [
+                "351355caf30d87b4"
+            ],
+            [
+                "351355caf30d87b4"
+            ],
             [
                 "351355caf30d87b4"
             ]
@@ -498,8 +490,8 @@
         "authType": "",
         "senderr": false,
         "headers": [],
-        "x": 340,
-        "y": 940,
+        "x": 540,
+        "y": 860,
         "wires": [
             [
                 "ec08f035eb961b86"
@@ -519,8 +511,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 430,
-        "y": 1020,
+        "x": 750,
+        "y": 1040,
         "wires": []
     },
     {
@@ -549,6 +541,26 @@
         "wires": [
             [
                 "f71381ce96c175fd"
+            ]
+        ]
+    },
+    {
+        "id": "f118c486277a3dd2",
+        "type": "function",
+        "z": "96b9cec355a795e1",
+        "name": "prep delete files",
+        "func": "// 1. List all 5 files that need a reset\nconst triggers = ['http', 'queue', 'orchestration', 'timer', 'storage'];\n\nconst deleteMessages = triggers.map(type => {\n    return {\n        filename: `/data/datasets/cleaned_${type}_invocations.json`\n    };\n});\n\n// 2. Output 5 individual messages to the delete node\nreturn [deleteMessages];",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 260,
+        "wires": [
+            [
+                "e4ce8558ef6a264e"
             ]
         ]
     }
