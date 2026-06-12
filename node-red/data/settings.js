@@ -510,7 +510,7 @@ module.exports = {
      *    global.get("os")
      */
     functionGlobalContext: {
-        // os:require('os'),
+        AWS: require('aws-sdk'),
     },
 
     /** The maximum number of messages nodes will buffer internally as part of their

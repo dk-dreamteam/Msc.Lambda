@@ -460,18 +460,10 @@
             [
                 "351355caf30d87b4"
             ],
-            [
-                "351355caf30d87b4"
-            ],
-            [
-                "351355caf30d87b4"
-            ],
-            [
-                "351355caf30d87b4"
-            ],
-            [
-                "351355caf30d87b4"
-            ]
+            [],
+            [],
+            [],
+            []
         ]
     },
     {
@@ -563,5 +555,53 @@
                 "e4ce8558ef6a264e"
             ]
         ]
+    },
+    {
+        "id": "a901b902c903d904",
+        "type": "http in",
+        "z": "96b9cec355a795e1",
+        "name": "Classify Endpoint",
+        "url": "/classify",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 200,
+        "y": 1200,
+        "wires": [
+            [
+                "e905f906g907h908"
+            ]
+        ]
+    },
+    {
+        "id": "e905f906g907h908",
+        "type": "function",
+        "z": "96b9cec355a795e1",
+        "name": "Validate & Classify",
+        "func": "// Load AWS SDK (registered in settings.js functionGlobalContext)\nconst AWS = global.get('AWS');\n\n// Define accepted trigger types and output labels\nconst validTriggers = ['http', 'queue', 'orchestration', 'timer', 'storage'];\nconst labels = ['low', 'mid', 'high'];\n\n// Extract input from the POST body\nconst trigger = msg.payload.trigger;\nconst total = msg.payload.totalDailyInvocations;\nconst res = msg.res;\n\n// --- Validation ---\n// Reject if trigger is not one of the 5 known types, or total is not a positive integer\nif (!validTriggers.includes(trigger) || !Number.isInteger(total) || total <= 0) {\n    return { payload: \"invalid input\", statusCode: 400, res: res };\n}\n\nnode.warn(\"validation ok\");\n\n// --- MinIO client setup ---\n// Configure S3-compatible client pointing to the MinIO container\nconst s3 = new AWS.S3({\n    endpoint: 'http://minio-iis:9000',\n    accessKeyId: 'minioadmin',\n    secretAccessKey: 'minioadmin',\n    s3ForcePathStyle: true,\n    signatureVersion: 'v4'\n});\n\nconst bucket = 'azure-functions-raw';\nconst prefix = `results/${trigger}/centroids.csv/`;\n\n// --- Step 1: List centroids directory to find the actual part file ---\n// Spark writes files like: centroids.csv/part-00000-<uuid>-c000.csv\nreturn s3.listObjects({ Bucket: bucket, Prefix: prefix }).promise()\n    .then(data => {\n        // Find the first part file (ignore _SUCCESS or other metadata files)\n        const objects = data.Contents || [];\n        const partFile = objects.find(o => o.Key.includes('part-'));\n        if (!partFile) throw new Error('No centroids file found');\n        \n        node.warn(\"file found\");\n        // --- Step 2: Download the CSV content ---\n        return s3.getObject({ Bucket: bucket, Key: partFile.Key }).promise();\n    })\n    .then(data => {\n        // --- Step 3: Parse the CSV into centroid rows ---\n        // Expected format:\n        //   cluster_id,centroid_invocations\n        //   0,376.4\n        //   1,1984364.0\n        //   2,11482.0\n        const csv = data.Body.toString('utf8');\n        const lines = csv.trim().split('\\n').filter(l => l.length > 0);\n        \n        // Skip the header row, parse each data row\n        const centroids = [];\n        for (let i = 1; i < lines.length; i++) {\n            const parts = lines[i].split(',');\n            // const clusterId = parseInt(parts[0]);\n            const centroidValue = parseFloat(parts[1]);\n            centroids.push(centroidValue);\n        }\n\n        node.warn(\"centroids are \" + centroids);\n\n        // Order centroids by centroidValue ascending.\n        // centroids = centroids.sort((a, b) => a.centroidValue - b.centroidValue);\n        centroids.sort((a, b) => a - b);\n\n        node.warn(\"sorted centroids are \" + centroids);\n        \n        // --- Step 4: Find the cluster with centroid closest to the input total ---\n        let nearestCluster = centroids[0];\n        let smallestDifference = Math.abs(centroids[0] - total);\n        \n        for (let i = 1; i < centroids.length; i++) {\n            const currentDiff = Math.abs(centroids[i] - total);\n            if (currentDiff < smallestDifference) {\n                smallestDifference = currentDiff;\n                nearestCluster = centroids[i];\n            }\n        }\n\n        node.warn(\"right before shit hits the fan\");\n\n        // --- Step 5: Map cluster ID to a label and return it ---\n        // Cluster 0 -> \"low\", 1 -> \"mid\", 2 -> \"high\"\n        const resultLabel = labels[centroids.indexOf(nearestCluster)] || 'unknown';\n\n        node.warn(\"you didn't find the id.\");\n        return { payload: resultLabel, res: res };\n    })\n    .catch(err => {\n        // Any error (MinIO unavailable, file missing, etc.) returns 400\n        return { payload: \"Bad luck\", statusCode: 500, res: res };\n    });",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 1200,
+        "wires": [
+            [
+                "i909j910k911l912"
+            ]
+        ]
+    },
+    {
+        "id": "i909j910k911l912",
+        "type": "http response",
+        "z": "96b9cec355a795e1",
+        "name": "Send Response",
+        "statusCode": "",
+        "headers": {},
+        "x": 680,
+        "y": 1200,
+        "wires": []
     }
 ]
