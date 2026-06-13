@@ -609,8 +609,7 @@
         "y": 1240,
         "wires": [
             [
-                "69470d95c530e7fb",
-                "1b80beb29b30533e"
+                "69470d95c530e7fb"
             ]
         ]
     },
@@ -624,8 +623,7 @@
         "y": 1160,
         "wires": [
             [
-                "4b3243874b3472f8",
-                "4eca6c8498d74e1e"
+                "4b3243874b3472f8"
             ]
         ]
     },
@@ -634,7 +632,7 @@
         "type": "function",
         "z": "96b9cec355a795e1",
         "name": "Inject Affinity Policy",
-        "func": "// 1. Ανακτούμε το Kubernetes Object που είχαμε σώσει στο Βήμα 2\nlet deployment = msg.kube_object;\n\n// 2. Διαβάζουμε το tier που μόλις επέστρεψε ο κόμβος http request\n// (Προσαρμόζεις το msg.payload ανάλογα με το τι επιστρέφει το δικό σου Validate & Classify)\nlet tier = msg.payload || \"low\";\n\n// 3. Δημιουργία των απαραίτητων sub-objects για να μην κρασάρει η JS\nif (!deployment.spec) deployment.spec = {};\nif (!deployment.spec.template) deployment.spec.template = {};\nif (!deployment.spec.template.metadata) deployment.spec.template.metadata = {};\nif (!deployment.spec.template.metadata.labels) deployment.spec.template.metadata.labels = {};\nif (!deployment.spec.template.spec) deployment.spec.template.spec = {};\n\n// 4. Εισαγωγή του Workload Label\ndeployment.spec.template.metadata.labels[\"azure-workload\"] = tier;\n\n// 5. Τα 2 σταθερά καλούπια Affinity / Anti-Affinity\nconst ANTI_AFFINITY_HIGH = {\n    podAntiAffinity: {\n        preferredDuringSchedulingIgnoredDuringExecution: [{\n            weight: 100,\n            podAffinityTerm: {\n                labelSelector: {\n                    matchExpressions: [{ key: \"azure-workload\", operator: \"In\", values: [\"high\"] }]\n                },\n                topologyKey: \"kubernetes.io/hostname\"\n            }\n        }]\n    }\n};\n\nconst AFFINITY_LOW_MID = {\n    podAffinity: {\n        preferredDuringSchedulingIgnoredDuringExecution: [{\n            weight: 50,\n            podAffinityTerm: {\n                labelSelector: {\n                    matchExpressions: [{ key: \"azure-workload\", operator: \"In\", values: [\"low\", \"mid\"] }]\n                },\n                topologyKey: \"kubernetes.io/hostname\"\n            }\n        }]\n    }\n};\n\n// 6. Απόφαση βάσει του API\nif (tier === \"high\") {\n    deployment.spec.template.spec.affinity = ANTI_AFFINITY_HIGH;\n} else {\n    deployment.spec.template.spec.affinity = AFFINITY_LOW_MID;\n}\n\n// 7. Επαναφέρουμε το τελικό τροποποιημένο αντικείμενο στο payload για να γίνει YAML\nmsg.payload = deployment;\nreturn msg;",
+        "func": "// 1. Ανακτούμε το Kubernetes Object που είχαμε σώσει στο Βήμα 2\nlet deployment = msg.kube_object;\n\n// 2. Διαβάζουμε το tier που μόλις επέστρεψε ο κόμβος http request\n// (Προσαρμόζεις το msg.payload ανάλογα με το τι επιστρέφει το δικό σου Validate & Classify)\nlet tier = msg.payload || \"low\";\n\nnode.warn(\"Function tier is: \" + tier);\n\n// 3. Δημιουργία των απαραίτητων sub-objects για να μην κρασάρει η JS\nif (!deployment.spec) deployment.spec = {};\nif (!deployment.spec.template) deployment.spec.template = {};\nif (!deployment.spec.template.metadata) deployment.spec.template.metadata = {};\nif (!deployment.spec.template.metadata.labels) deployment.spec.template.metadata.labels = {};\nif (!deployment.spec.template.spec) deployment.spec.template.spec = {};\n\n// 4. Εισαγωγή του Workload Label\ndeployment.spec.template.metadata.labels[\"azure-workload\"] = tier;\n\n// 5. Τα 2 σταθερά καλούπια Affinity / Anti-Affinity\nconst ANTI_AFFINITY_HIGH = {\n    podAntiAffinity: {\n        preferredDuringSchedulingIgnoredDuringExecution: [{\n            weight: 100,\n            podAffinityTerm: {\n                labelSelector: {\n                    matchExpressions: [{ key: \"azure-workload\", operator: \"In\", values: [\"high\"] }]\n                },\n                topologyKey: \"kubernetes.io/hostname\"\n            }\n        }]\n    }\n};\n\nconst AFFINITY_LOW_MID = {\n    podAffinity: {\n        preferredDuringSchedulingIgnoredDuringExecution: [{\n            weight: 50,\n            podAffinityTerm: {\n                labelSelector: {\n                    matchExpressions: [{ key: \"azure-workload\", operator: \"In\", values: [\"low\", \"mid\"] }]\n                },\n                topologyKey: \"kubernetes.io/hostname\"\n            }\n        }]\n    }\n};\n\n// 6. Απόφαση βάσει του API\nif (tier === \"high\") {\n    deployment.spec.template.spec.affinity = ANTI_AFFINITY_HIGH;\n} else {\n    deployment.spec.template.spec.affinity = AFFINITY_LOW_MID;\n}\n\n// 7. Επαναφέρουμε το τελικό τροποποιημένο αντικείμενο στο payload για να γίνει YAML\nmsg.payload = deployment;\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -645,8 +643,7 @@
         "y": 1240,
         "wires": [
             [
-                "52b86de4eae91821",
-                "1b80beb29b30533e"
+                "52b86de4eae91821"
             ]
         ]
     },
@@ -671,8 +668,7 @@
         "y": 1160,
         "wires": [
             [
-                "fbf80c1282503a54",
-                "4eca6c8498d74e1e"
+                "fbf80c1282503a54"
             ]
         ]
     },
@@ -696,8 +692,7 @@
         "y": 1160,
         "wires": [
             [
-                "7e35154ebf21d22d",
-                "4eca6c8498d74e1e"
+                "7e35154ebf21d22d"
             ]
         ]
     },
@@ -717,41 +712,8 @@
         "y": 1240,
         "wires": [
             [
-                "e30d0039329a7a27",
-                "1b80beb29b30533e"
+                "e30d0039329a7a27"
             ]
         ]
-    },
-    {
-        "id": "1b80beb29b30533e",
-        "type": "debug",
-        "z": "96b9cec355a795e1",
-        "name": "debug 11",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1160,
-        "y": 1420,
-        "wires": []
-    },
-    {
-        "id": "4eca6c8498d74e1e",
-        "type": "debug",
-        "z": "96b9cec355a795e1",
-        "name": "debug 12",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1200,
-        "y": 1040,
-        "wires": []
     }
 ]
