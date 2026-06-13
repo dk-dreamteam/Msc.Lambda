@@ -38,7 +38,7 @@ services:
       - spark-minio-net
 
   spark-master:
-      image: my-spark-ml:latest
+      image: dimgrev/lamda:latest
       container_name: spark-master
       environment:
         - SPARK_MODE=master
@@ -63,7 +63,7 @@ services:
         - spark-minio-net
 
   spark-worker-1:
-    image: my-spark-ml:latest
+    image: dimgrev/lamda:latest
     container_name: spark-worker-1
     depends_on:
       - spark-master
@@ -88,7 +88,7 @@ services:
       - spark-minio-net
 
   spark-worker-2:
-    image: my-spark-ml:latest
+    image: dimgrev/lamda:latest
     container_name: spark-worker-2
     depends_on:
       - spark-master
