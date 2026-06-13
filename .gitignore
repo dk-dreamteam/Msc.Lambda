@@ -9,3 +9,4 @@ node-red/data/datasets/cleaned_queue_invocations.json
 node-red/data/datasets/cleaned_storage_invocations.json
 node-red/data/datasets/cleaned_timer_invocations.json
 minio/data/*
+minio/data/azure-functions-raw/*
