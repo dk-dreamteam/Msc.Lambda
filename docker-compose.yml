@@ -16,7 +16,7 @@ services:
       - minio-iis
     volumes:
       - ./node-red/data:/data # Persist flows, settings, and nodes
-      - ./datasets:/node-red/data/datasets
+      - ./datasets:/data/datasets
     networks:
       - spark-minio-net
 
