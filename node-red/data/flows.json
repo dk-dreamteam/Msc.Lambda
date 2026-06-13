@@ -33,11 +33,10 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 160,
-        "y": 380,
+        "x": 140,
+        "y": 240,
         "wires": [
             [
-                "0b6ee214a31477d5",
                 "f118c486277a3dd2"
             ]
         ]
@@ -63,8 +62,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 180,
-        "y": 80,
+        "x": 140,
+        "y": 100,
         "wires": [
             [
                 "838bb70ee417ecaf"
@@ -83,7 +82,7 @@
         "winHide": false,
         "oldrc": false,
         "name": "",
-        "x": 400,
+        "x": 300,
         "y": 140,
         "wires": [
             [
@@ -106,8 +105,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 600,
-        "y": 180,
+        "x": 460,
+        "y": 100,
         "wires": []
     },
     {
@@ -122,8 +121,8 @@
         "sendError": false,
         "encoding": "none",
         "allProps": true,
-        "x": 610,
-        "y": 560,
+        "x": 470,
+        "y": 420,
         "wires": [
             [
                 "df646d4db046cc24"
@@ -146,8 +145,8 @@
         "strings": true,
         "include_empty_strings": "",
         "include_null_values": "",
-        "x": 870,
-        "y": 640,
+        "x": 650,
+        "y": 360,
         "wires": [
             [
                 "805442b89b275099"
@@ -166,8 +165,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1030,
-        "y": 700,
+        "x": 670,
+        "y": 300,
         "wires": [
             [
                 "6facc07263f98194",
@@ -189,8 +188,8 @@
         "createDir": true,
         "overwriteFile": "false",
         "encoding": "none",
-        "x": 1280,
-        "y": 740,
+        "x": 820,
+        "y": 360,
         "wires": [
             []
         ]
@@ -207,8 +206,8 @@
         "sendError": false,
         "encoding": "none",
         "allProps": false,
-        "x": 1580,
-        "y": 620,
+        "x": 960,
+        "y": 420,
         "wires": [
             [
                 "a73e0112de16f259",
@@ -228,8 +227,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1810,
-        "y": 700,
+        "x": 1010,
+        "y": 480,
         "wires": [
             [
                 "44158e5d54da2eb8",
@@ -252,29 +251,13 @@
         "name": "",
         "acl": "",
         "outputs": 1,
-        "x": 2040,
-        "y": 820,
+        "x": 1110,
+        "y": 540,
         "wires": [
             [
                 "e232551c9f7f93cf"
             ]
         ]
-    },
-    {
-        "id": "0b6ee214a31477d5",
-        "type": "debug",
-        "z": "96b9cec355a795e1",
-        "name": "debug 2",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 360,
-        "y": 340,
-        "wires": []
     },
     {
         "id": "6facc07263f98194",
@@ -289,8 +272,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1180,
-        "y": 560,
+        "x": 800,
+        "y": 240,
         "wires": []
     },
     {
@@ -305,8 +288,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1800,
-        "y": 560,
+        "x": 1080,
+        "y": 360,
         "wires": []
     },
     {
@@ -321,8 +304,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 2000,
-        "y": 620,
+        "x": 1140,
+        "y": 420,
         "wires": []
     },
     {
@@ -337,8 +320,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 2220,
-        "y": 740,
+        "x": 1220,
+        "y": 480,
         "wires": []
     },
     {
@@ -353,8 +336,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1330,
-        "y": 660,
+        "x": 890,
+        "y": 320,
         "wires": [
             [
                 "484c51b8b6029e31",
@@ -374,8 +357,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1500,
-        "y": 520,
+        "x": 1040,
+        "y": 260,
         "wires": []
     },
     {
@@ -389,8 +372,8 @@
         "createDir": false,
         "overwriteFile": "delete",
         "encoding": "none",
-        "x": 550,
-        "y": 460,
+        "x": 270,
+        "y": 360,
         "wires": [
             [
                 "f71381ce96c175fd"
@@ -418,8 +401,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 200,
-        "y": 780,
+        "x": 160,
+        "y": 620,
         "wires": [
             [
                 "616f273da6342a5e"
@@ -438,8 +421,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 420,
-        "y": 860,
+        "x": 380,
+        "y": 620,
         "wires": [
             [
                 "351355caf30d87b4"
@@ -474,8 +457,8 @@
         "authType": "",
         "senderr": false,
         "headers": [],
-        "x": 660,
-        "y": 860,
+        "x": 620,
+        "y": 620,
         "wires": [
             [
                 "ec08f035eb961b86"
@@ -495,8 +478,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 870,
-        "y": 940,
+        "x": 810,
+        "y": 620,
         "wires": []
     },
     {
@@ -520,8 +503,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 220,
-        "y": 560,
+        "x": 140,
+        "y": 420,
         "wires": [
             [
                 "f71381ce96c175fd"
@@ -540,8 +523,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 360,
-        "y": 420,
+        "x": 200,
+        "y": 300,
         "wires": [
             [
                 "e4ce8558ef6a264e"
@@ -557,8 +540,8 @@
         "method": "post",
         "upload": false,
         "swaggerDoc": "",
-        "x": 180,
-        "y": 1040,
+        "x": 160,
+        "y": 780,
         "wires": [
             [
                 "e905f906g907h908"
@@ -577,8 +560,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 420,
-        "y": 1040,
+        "x": 400,
+        "y": 780,
         "wires": [
             [
                 "i909j910k911l912"
@@ -592,8 +575,8 @@
         "name": "Send Response",
         "statusCode": "",
         "headers": {},
-        "x": 660,
-        "y": 1040,
+        "x": 640,
+        "y": 780,
         "wires": []
     },
     {
@@ -605,8 +588,8 @@
         "method": "post",
         "upload": false,
         "swaggerDoc": "",
-        "x": 190,
-        "y": 1240,
+        "x": 170,
+        "y": 920,
         "wires": [
             [
                 "69470d95c530e7fb"
@@ -619,8 +602,8 @@
         "z": "96b9cec355a795e1",
         "property": "payload",
         "name": "YAML to JS Object",
-        "x": 410,
-        "y": 1160,
+        "x": 330,
+        "y": 980,
         "wires": [
             [
                 "4b3243874b3472f8"
@@ -639,8 +622,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 910,
-        "y": 1240,
+        "x": 850,
+        "y": 920,
         "wires": [
             [
                 "52b86de4eae91821"
@@ -656,8 +639,8 @@
         "headers": {
             "Content-Type": "application/yaml"
         },
-        "x": 1190,
-        "y": 1220,
+        "x": 1050,
+        "y": 920,
         "wires": []
     },
     {
@@ -666,8 +649,8 @@
         "z": "96b9cec355a795e1",
         "property": "payload",
         "name": "",
-        "x": 1030,
-        "y": 1160,
+        "x": 970,
+        "y": 980,
         "wires": [
             [
                 "fbf80c1282503a54"
@@ -690,8 +673,8 @@
         "authType": "",
         "senderr": false,
         "headers": [],
-        "x": 720,
-        "y": 1160,
+        "x": 680,
+        "y": 980,
         "wires": [
             [
                 "7e35154ebf21d22d"
@@ -710,12 +693,102 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 580,
-        "y": 1240,
+        "x": 500,
+        "y": 920,
         "wires": [
             [
                 "e30d0039329a7a27"
             ]
         ]
+    },
+    {
+        "id": "bc5be14c24fbc847",
+        "type": "comment",
+        "z": "96b9cec355a795e1",
+        "name": "First Check that node red is working properlly and reads its container files",
+        "info": "",
+        "x": 340,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "b1e6fde1c2c5c3b8",
+        "type": "comment",
+        "z": "96b9cec355a795e1",
+        "name": "Initiate Ingestion Layer",
+        "info": "",
+        "x": 180,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "9ed7a4b949482e8c",
+        "type": "comment",
+        "z": "96b9cec355a795e1",
+        "name": "Initiate Ingestion Layer Without Deleting (First Run)",
+        "info": "",
+        "x": 270,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "7bd352961076e34e",
+        "type": "comment",
+        "z": "96b9cec355a795e1",
+        "name": "Initiate Batch Layer",
+        "info": "",
+        "x": 170,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "14c3cf5a7e0df237",
+        "type": "comment",
+        "z": "96b9cec355a795e1",
+        "name": "API Simple Classification ",
+        "info": "",
+        "x": 190,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "c6ee8922410523b5",
+        "type": "comment",
+        "z": "96b9cec355a795e1",
+        "name": "API Get K8s Yaml For Function With Affinity Rules",
+        "info": "",
+        "x": 260,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "9369d01a732ee5c8",
+        "type": "comment",
+        "z": "96b9cec355a795e1",
+        "name": "LAYER - (1)",
+        "info": "",
+        "x": 90,
+        "y": 20,
+        "wires": []
+    },
+    {
+        "id": "322ca64349754757",
+        "type": "comment",
+        "z": "96b9cec355a795e1",
+        "name": "LAYER - (2)",
+        "info": "",
+        "x": 90,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "029eceaca84f75e4",
+        "type": "comment",
+        "z": "96b9cec355a795e1",
+        "name": "LAYER - (3)",
+        "info": "",
+        "x": 90,
+        "y": 700,
+        "wires": []
     }
 ]
