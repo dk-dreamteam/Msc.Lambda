@@ -557,8 +557,8 @@
         "method": "post",
         "upload": false,
         "swaggerDoc": "",
-        "x": 200,
-        "y": 1200,
+        "x": 180,
+        "y": 1040,
         "wires": [
             [
                 "e905f906g907h908"
@@ -570,15 +570,15 @@
         "type": "function",
         "z": "96b9cec355a795e1",
         "name": "Validate & Classify",
-        "func": "// Load AWS SDK (registered in settings.js functionGlobalContext)\nconst AWS = global.get('AWS');\n\n// Define accepted trigger types and output labels\nconst validTriggers = ['http', 'queue', 'orchestration', 'timer', 'storage'];\nconst labels = ['low', 'mid', 'high'];\n\n// Extract input from the POST body\nconst trigger = msg.payload.trigger;\nconst total = msg.payload.totalDailyInvocations;\nconst res = msg.res;\n\n// --- Validation ---\n// Reject if trigger is not one of the 5 known types, or total is not a positive integer\nif (!validTriggers.includes(trigger) || !Number.isInteger(total) || total <= 0) {\n    return { payload: \"invalid input\", statusCode: 400, res: res };\n}\n\nnode.warn(\"validation ok\");\n\n// --- MinIO client setup ---\n// Configure S3-compatible client pointing to the MinIO container\nconst s3 = new AWS.S3({\n    endpoint: 'http://minio-iis:9000',\n    accessKeyId: 'minioadmin',\n    secretAccessKey: 'minioadmin',\n    s3ForcePathStyle: true,\n    signatureVersion: 'v4'\n});\n\nconst bucket = 'azure-functions-raw';\nconst prefix = `results/${trigger}/centroids.csv/`;\n\n// --- Step 1: List centroids directory to find the actual part file ---\n// Spark writes files like: centroids.csv/part-00000-<uuid>-c000.csv\nreturn s3.listObjects({ Bucket: bucket, Prefix: prefix }).promise()\n    .then(data => {\n        // Find the first part file (ignore _SUCCESS or other metadata files)\n        const objects = data.Contents || [];\n        const partFile = objects.find(o => o.Key.includes('part-'));\n        if (!partFile) throw new Error('No centroids file found');\n        \n        node.warn(\"file found\");\n        // --- Step 2: Download the CSV content ---\n        return s3.getObject({ Bucket: bucket, Key: partFile.Key }).promise();\n    })\n    .then(data => {\n        // --- Step 3: Parse the CSV into centroid rows ---\n        // Expected format:\n        //   cluster_id,centroid_invocations\n        //   0,376.4\n        //   1,1984364.0\n        //   2,11482.0\n        const csv = data.Body.toString('utf8');\n        const lines = csv.trim().split('\\n').filter(l => l.length > 0);\n        \n        // Skip the header row, parse each data row\n        const centroids = [];\n        for (let i = 1; i < lines.length; i++) {\n            const parts = lines[i].split(',');\n            // const clusterId = parseInt(parts[0]);\n            const centroidValue = parseFloat(parts[1]);\n            centroids.push(centroidValue);\n        }\n\n        node.warn(\"centroids are \" + centroids);\n\n        // Order centroids by centroidValue ascending.\n        // centroids = centroids.sort((a, b) => a.centroidValue - b.centroidValue);\n        centroids.sort((a, b) => a - b);\n\n        node.warn(\"sorted centroids are \" + centroids);\n        \n        // --- Step 4: Find the cluster with centroid closest to the input total ---\n        let nearestCluster = centroids[0];\n        let smallestDifference = Math.abs(centroids[0] - total);\n        \n        for (let i = 1; i < centroids.length; i++) {\n            const currentDiff = Math.abs(centroids[i] - total);\n            if (currentDiff < smallestDifference) {\n                smallestDifference = currentDiff;\n                nearestCluster = centroids[i];\n            }\n        }\n\n        node.warn(\"right before shit hits the fan\");\n\n        // --- Step 5: Map cluster ID to a label and return it ---\n        // Cluster 0 -> \"low\", 1 -> \"mid\", 2 -> \"high\"\n        const resultLabel = labels[centroids.indexOf(nearestCluster)] || 'unknown';\n\n        node.warn(\"you didn't find the id.\");\n        return { payload: resultLabel, res: res };\n    })\n    .catch(err => {\n        // Any error (MinIO unavailable, file missing, etc.) returns 400\n        return { payload: \"Bad luck\", statusCode: 500, res: res };\n    });",
+        "func": "// Load AWS SDK (registered in settings.js functionGlobalContext)\nconst AWS = global.get('AWS');\n\n// Define accepted trigger types and output labels\nconst validTriggers = ['http', 'queue', 'orchestration', 'timer', 'storage'];\nconst labels = ['low', 'mid', 'high'];\n\n// Extract input from the POST body\nconst trigger = msg.payload.trigger;\nconst total = msg.payload.totalDailyInvocations;\nconst res = msg.res;\n\n// --- Validation ---\n// Reject if trigger is not one of the 5 known types, or total is not a positive integer\nif (!validTriggers.includes(trigger) || !Number.isInteger(total) || total <= 0) {\n    return { payload: \"invalid input\", statusCode: 400, res: res };\n}\n\nnode.warn(\"Total Daily Invocations are: \" + total);\n\n// --- MinIO client setup ---\n// Configure S3-compatible client pointing to the MinIO container\nconst s3 = new AWS.S3({\n    endpoint: 'http://minio-iis:9000',\n    accessKeyId: 'minioadmin',\n    secretAccessKey: 'minioadmin',\n    s3ForcePathStyle: true,\n    signatureVersion: 'v4'\n});\n\nconst bucket = 'azure-functions-raw';\nconst prefix = `results/${trigger}/centroids.csv/`;\n\n// --- Step 1: List centroids directory to find the actual part file ---\n// Spark writes files like: centroids.csv/part-00000-<uuid>-c000.csv\nreturn s3.listObjects({ Bucket: bucket, Prefix: prefix }).promise()\n    .then(data => {\n        // Find the first part file (ignore _SUCCESS or other metadata files)\n        const objects = data.Contents || [];\n        const partFile = objects.find(o => o.Key.includes('part-'));\n        if (!partFile) throw new Error('No centroids file found');\n        \n        // --- Step 2: Download the CSV content ---\n        return s3.getObject({ Bucket: bucket, Key: partFile.Key }).promise();\n    })\n    .then(data => {\n        // --- Step 3: Parse the CSV into centroid rows ---\n        // Expected format:\n        //   cluster_id,centroid_invocations\n        //   0,376.4\n        //   1,1984364.0\n        //   2,11482.0\n        const csv = data.Body.toString('utf8');\n        const lines = csv.trim().split('\\n').filter(l => l.length > 0);\n        \n        // Skip the header row, parse each data row\n        const centroids = [];\n        for (let i = 1; i < lines.length; i++) {\n            const parts = lines[i].split(',');\n            // const clusterId = parseInt(parts[0]);\n            const centroidValue = parseFloat(parts[1]);\n            centroids.push(centroidValue);\n        }\n\n        // Order centroids by centroidValue ascending.\n        // centroids = centroids.sort((a, b) => a.centroidValue - b.centroidValue);\n        centroids.sort((a, b) => a - b);\n\n        node.warn(\"sorted centroids are \" + centroids);\n        \n        // --- Step 4: Find the cluster with centroid closest to the input total ---\n        let nearestCluster = centroids[0];\n        let smallestDifference = Math.abs(centroids[0] - total);\n        \n        for (let i = 1; i < centroids.length; i++) {\n            const currentDiff = Math.abs(centroids[i] - total);\n            if (currentDiff < smallestDifference) {\n                smallestDifference = currentDiff;\n                nearestCluster = centroids[i];\n            }\n        }\n\n        // --- Step 5: Map cluster ID to a label and return it ---\n        // Cluster 0 -> \"low\", 1 -> \"mid\", 2 -> \"high\"\n        const resultLabel = labels[centroids.indexOf(nearestCluster)] || 'unknown';\n\n        node.warn(\"Result label: \" + resultLabel);\n        return { payload: resultLabel, res: res };\n    })\n    .catch(err => {\n        // Any error (MinIO unavailable, file missing, etc.) returns 400\n        return { payload: \"Bad luck\", statusCode: 500, res: res };\n    });",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 440,
-        "y": 1200,
+        "x": 420,
+        "y": 1040,
         "wires": [
             [
                 "i909j910k911l912"
@@ -592,8 +592,166 @@
         "name": "Send Response",
         "statusCode": "",
         "headers": {},
-        "x": 680,
-        "y": 1200,
+        "x": 660,
+        "y": 1040,
+        "wires": []
+    },
+    {
+        "id": "b18de8b0290368f6",
+        "type": "http in",
+        "z": "96b9cec355a795e1",
+        "name": "Receive Static YAML",
+        "url": "/deploy-function",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 190,
+        "y": 1240,
+        "wires": [
+            [
+                "69470d95c530e7fb",
+                "1b80beb29b30533e"
+            ]
+        ]
+    },
+    {
+        "id": "69470d95c530e7fb",
+        "type": "yaml",
+        "z": "96b9cec355a795e1",
+        "property": "payload",
+        "name": "YAML to JS Object",
+        "x": 410,
+        "y": 1160,
+        "wires": [
+            [
+                "4b3243874b3472f8",
+                "4eca6c8498d74e1e"
+            ]
+        ]
+    },
+    {
+        "id": "7e35154ebf21d22d",
+        "type": "function",
+        "z": "96b9cec355a795e1",
+        "name": "Inject Affinity Policy",
+        "func": "// 1. Ανακτούμε το Kubernetes Object που είχαμε σώσει στο Βήμα 2\nlet deployment = msg.kube_object;\n\n// 2. Διαβάζουμε το tier που μόλις επέστρεψε ο κόμβος http request\n// (Προσαρμόζεις το msg.payload ανάλογα με το τι επιστρέφει το δικό σου Validate & Classify)\nlet tier = msg.payload || \"low\";\n\n// 3. Δημιουργία των απαραίτητων sub-objects για να μην κρασάρει η JS\nif (!deployment.spec) deployment.spec = {};\nif (!deployment.spec.template) deployment.spec.template = {};\nif (!deployment.spec.template.metadata) deployment.spec.template.metadata = {};\nif (!deployment.spec.template.metadata.labels) deployment.spec.template.metadata.labels = {};\nif (!deployment.spec.template.spec) deployment.spec.template.spec = {};\n\n// 4. Εισαγωγή του Workload Label\ndeployment.spec.template.metadata.labels[\"azure-workload\"] = tier;\n\n// 5. Τα 2 σταθερά καλούπια Affinity / Anti-Affinity\nconst ANTI_AFFINITY_HIGH = {\n    podAntiAffinity: {\n        preferredDuringSchedulingIgnoredDuringExecution: [{\n            weight: 100,\n            podAffinityTerm: {\n                labelSelector: {\n                    matchExpressions: [{ key: \"azure-workload\", operator: \"In\", values: [\"high\"] }]\n                },\n                topologyKey: \"kubernetes.io/hostname\"\n            }\n        }]\n    }\n};\n\nconst AFFINITY_LOW_MID = {\n    podAffinity: {\n        preferredDuringSchedulingIgnoredDuringExecution: [{\n            weight: 50,\n            podAffinityTerm: {\n                labelSelector: {\n                    matchExpressions: [{ key: \"azure-workload\", operator: \"In\", values: [\"low\", \"mid\"] }]\n                },\n                topologyKey: \"kubernetes.io/hostname\"\n            }\n        }]\n    }\n};\n\n// 6. Απόφαση βάσει του API\nif (tier === \"high\") {\n    deployment.spec.template.spec.affinity = ANTI_AFFINITY_HIGH;\n} else {\n    deployment.spec.template.spec.affinity = AFFINITY_LOW_MID;\n}\n\n// 7. Επαναφέρουμε το τελικό τροποποιημένο αντικείμενο στο payload για να γίνει YAML\nmsg.payload = deployment;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 910,
+        "y": 1240,
+        "wires": [
+            [
+                "52b86de4eae91821",
+                "1b80beb29b30533e"
+            ]
+        ]
+    },
+    {
+        "id": "fbf80c1282503a54",
+        "type": "http response",
+        "z": "96b9cec355a795e1",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1190,
+        "y": 1220,
+        "wires": []
+    },
+    {
+        "id": "52b86de4eae91821",
+        "type": "yaml",
+        "z": "96b9cec355a795e1",
+        "property": "kube_object",
+        "name": "",
+        "x": 1030,
+        "y": 1160,
+        "wires": [
+            [
+                "fbf80c1282503a54",
+                "4eca6c8498d74e1e"
+            ]
+        ]
+    },
+    {
+        "id": "e30d0039329a7a27",
+        "type": "http request",
+        "z": "96b9cec355a795e1",
+        "name": "Call Classification API",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://localhost:1880/classify",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 720,
+        "y": 1160,
+        "wires": [
+            [
+                "7e35154ebf21d22d",
+                "4eca6c8498d74e1e"
+            ]
+        ]
+    },
+    {
+        "id": "4b3243874b3472f8",
+        "type": "function",
+        "z": "96b9cec355a795e1",
+        "name": "Prepare API Payload",
+        "func": "// 1. Παίρνουμε το έτοιμο αντικείμενο από το payload και το σώζουμε στο kube_object\n// για να μην το σβήσει το HTTP Request που ακολουθεί\nmsg.kube_object = msg.payload;\n\n// 2. Έλεγχος ασφαλείας: Υπάρχουν τα annotations στο YAML;\nif (msg.kube_object && msg.kube_object.metadata && msg.kube_object.metadata.annotations) {\n    let annotations = msg.kube_object.metadata.annotations;\n    \n    // 3. Προετοιμάζουμε το payload για το Classification API\n    msg.payload = {\n        trigger: annotations.trigger,\n        totalDailyInvocations: parseInt(annotations.totalDailyInvocations)\n    };\n    \n    return msg;\n} else {\n    // Αν το YAML δεν έχει annotations, βγάλε ειδοποίηση στο debug και σταμάτα τη ροή\n    node.error(\"Το YAML δεν περιέχει metadata.annotations!\", msg);\n    return null; \n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 1240,
+        "wires": [
+            [
+                "e30d0039329a7a27",
+                "1b80beb29b30533e"
+            ]
+        ]
+    },
+    {
+        "id": "1b80beb29b30533e",
+        "type": "debug",
+        "z": "96b9cec355a795e1",
+        "name": "debug 11",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1160,
+        "y": 1420,
+        "wires": []
+    },
+    {
+        "id": "4eca6c8498d74e1e",
+        "type": "debug",
+        "z": "96b9cec355a795e1",
+        "name": "debug 12",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1200,
+        "y": 1040,
         "wires": []
     }
 ]
