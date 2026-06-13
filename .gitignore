@@ -1,5 +1,6 @@
 node-red/data/node_modules
 node-red/data/.npm*
+node-red/data/settings.js
 **/invocations_per_function_md.anon.d01.csv
 sparkdir/jars/aws-java-sdk-bundle-1.12.262.jar
 node-red/data/datasets/cleaned_http_invocations.json
