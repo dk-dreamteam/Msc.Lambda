@@ -13,22 +13,6 @@
         "sslenabled": true
     },
     {
-        "id": "43ac24f860723712",
-        "type": "debug",
-        "z": "96b9cec355a795e1",
-        "name": "debug 9",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 800,
-        "y": 360,
-        "wires": []
-    },
-    {
         "id": "6f37892fd7f19829",
         "type": "inject",
         "z": "96b9cec355a795e1",
@@ -50,7 +34,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 160,
-        "y": 240,
+        "y": 380,
         "wires": [
             [
                 "0b6ee214a31477d5",
@@ -79,8 +63,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 280,
-        "y": 620,
+        "x": 180,
+        "y": 80,
         "wires": [
             [
                 "838bb70ee417ecaf"
@@ -99,8 +83,8 @@
         "winHide": false,
         "oldrc": false,
         "name": "",
-        "x": 520,
-        "y": 680,
+        "x": 400,
+        "y": 140,
         "wires": [
             [
                 "d76c985c8fbd24b0"
@@ -122,8 +106,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 720,
-        "y": 720,
+        "x": 600,
+        "y": 180,
         "wires": []
     },
     {
@@ -138,8 +122,8 @@
         "sendError": false,
         "encoding": "none",
         "allProps": true,
-        "x": 630,
-        "y": 400,
+        "x": 610,
+        "y": 560,
         "wires": [
             [
                 "df646d4db046cc24"
@@ -162,8 +146,8 @@
         "strings": true,
         "include_empty_strings": "",
         "include_null_values": "",
-        "x": 890,
-        "y": 480,
+        "x": 870,
+        "y": 640,
         "wires": [
             [
                 "805442b89b275099"
@@ -182,8 +166,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1050,
-        "y": 540,
+        "x": 1030,
+        "y": 700,
         "wires": [
             [
                 "6facc07263f98194",
@@ -205,8 +189,8 @@
         "createDir": true,
         "overwriteFile": "false",
         "encoding": "none",
-        "x": 1300,
-        "y": 580,
+        "x": 1280,
+        "y": 740,
         "wires": [
             []
         ]
@@ -223,8 +207,8 @@
         "sendError": false,
         "encoding": "none",
         "allProps": false,
-        "x": 1600,
-        "y": 460,
+        "x": 1580,
+        "y": 620,
         "wires": [
             [
                 "a73e0112de16f259",
@@ -244,8 +228,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1830,
-        "y": 540,
+        "x": 1810,
+        "y": 700,
         "wires": [
             [
                 "44158e5d54da2eb8",
@@ -268,8 +252,8 @@
         "name": "",
         "acl": "",
         "outputs": 1,
-        "x": 2060,
-        "y": 660,
+        "x": 2040,
+        "y": 820,
         "wires": [
             [
                 "e232551c9f7f93cf"
@@ -288,8 +272,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 380,
-        "y": 180,
+        "x": 360,
+        "y": 340,
         "wires": []
     },
     {
@@ -305,8 +289,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1200,
-        "y": 400,
+        "x": 1180,
+        "y": 560,
         "wires": []
     },
     {
@@ -321,8 +305,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1820,
-        "y": 400,
+        "x": 1800,
+        "y": 560,
         "wires": []
     },
     {
@@ -337,8 +321,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 2020,
-        "y": 460,
+        "x": 2000,
+        "y": 620,
         "wires": []
     },
     {
@@ -353,8 +337,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 2240,
-        "y": 580,
+        "x": 2220,
+        "y": 740,
         "wires": []
     },
     {
@@ -369,8 +353,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1350,
-        "y": 500,
+        "x": 1330,
+        "y": 660,
         "wires": [
             [
                 "484c51b8b6029e31",
@@ -390,8 +374,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1520,
-        "y": 360,
+        "x": 1500,
+        "y": 520,
         "wires": []
     },
     {
@@ -405,8 +389,8 @@
         "createDir": false,
         "overwriteFile": "delete",
         "encoding": "none",
-        "x": 570,
-        "y": 300,
+        "x": 550,
+        "y": 460,
         "wires": [
             [
                 "f71381ce96c175fd"
@@ -434,8 +418,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 180,
-        "y": 760,
+        "x": 200,
+        "y": 780,
         "wires": [
             [
                 "616f273da6342a5e"
@@ -447,23 +431,31 @@
         "type": "function",
         "z": "96b9cec355a795e1",
         "name": "Build Payload",
-        "func": "const triggers = ['http', 'queue', 'orchestration', 'timer', 'storage'];\n\nreturn triggers.map(t => {\n    const script = `spark_kmeans_${t}.py`;\n    return {\n        payload: {\n            action: \"CreateSubmissionRequest\",\n            appResource: `/opt/spark/scripts/${script}`,\n            clientSparkVersion: \"4.1.2\",\n            mainClass: \"org.apache.spark.deploy.PythonRunner\",\n            appArgs: [`/opt/spark/scripts/${script}`, \"\"],\n            environmentVariables: {},\n            sparkProperties: {\n                \"spark.master\": \"spark://spark-master:7077\",\n                \"spark.submit.deployMode\": \"cluster\",\n                \"spark.app.name\": `KMeans_${t}`,\n                \"spark.driver.extraJavaOptions\": \"-Divy.cache.dir=/tmp/ivy -Divy.home=/tmp/ivy\",\n                \"spark.jars\": \"/opt/spark/external_jars/hadoop-aws-3.3.4.jar,/opt/spark/external_jars/aws-java-sdk-bundle-1.12.262.jar\"\n            }\n        }\n    };\n});",
+        "func": "const triggers = ['http', 'queue', 'orchestration', 'timer', 'storage'];\n\nreturn triggers.map(t => {\n    const script = `spark_kmeans_${t}.py`;\n    return {\n        payload: {\n            action: \"CreateSubmissionRequest\",\n            appResource: `/opt/spark/scripts/${script}`,\n            clientSparkVersion: \"4.1.2\",\n            mainClass: \"org.apache.spark.deploy.PythonRunner\",\n            appArgs: [`/opt/spark/scripts/${script}`, \"\"],\n            environmentVariables: {},\n            sparkProperties: {\n                \"spark.master\": \"spark://spark-master:7077\",\n                \"spark.submit.deployMode\": \"cluster\",\n                \"spark.cores.max\": \"2\",\n                \"spark.app.name\": `KMeans_${t}`,\n                \"spark.driver.extraJavaOptions\": \"-Divy.cache.dir=/tmp/ivy -Divy.home=/tmp/ivy\",\n                \"spark.jars\": \"/opt/spark/external_jars/hadoop-aws-3.3.4.jar,/opt/spark/external_jars/aws-java-sdk-bundle-1.12.262.jar\"\n            }\n        }\n    };\n});",
         "outputs": 5,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 260,
+        "x": 420,
         "y": 860,
         "wires": [
             [
                 "351355caf30d87b4"
             ],
-            [],
-            [],
-            [],
-            []
+            [
+                "351355caf30d87b4"
+            ],
+            [
+                "351355caf30d87b4"
+            ],
+            [
+                "351355caf30d87b4"
+            ],
+            [
+                "351355caf30d87b4"
+            ]
         ]
     },
     {
@@ -482,7 +474,7 @@
         "authType": "",
         "senderr": false,
         "headers": [],
-        "x": 540,
+        "x": 660,
         "y": 860,
         "wires": [
             [
@@ -503,8 +495,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 750,
-        "y": 1040,
+        "x": 870,
+        "y": 940,
         "wires": []
     },
     {
@@ -528,8 +520,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 240,
-        "y": 400,
+        "x": 220,
+        "y": 560,
         "wires": [
             [
                 "f71381ce96c175fd"
@@ -548,8 +540,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 380,
-        "y": 260,
+        "x": 360,
+        "y": 420,
         "wires": [
             [
                 "e4ce8558ef6a264e"
