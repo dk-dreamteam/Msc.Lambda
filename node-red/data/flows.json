@@ -653,7 +653,9 @@
         "z": "96b9cec355a795e1",
         "name": "",
         "statusCode": "",
-        "headers": {},
+        "headers": {
+            "Content-Type": "application/yaml"
+        },
         "x": 1190,
         "y": 1220,
         "wires": []
