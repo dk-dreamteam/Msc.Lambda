@@ -1,0 +1,77 @@
+{
+  "info": {
+    "_postman_id": "e0f87538-023f-4c7e-a556-1c8399809714",
+    "name": "AzureFunctionsLambda",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "4062130"
+  },
+  "item": [
+    {
+      "name": "Classify",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"trigger\": \"http\",\r\n    \"totalDailyInvocations\":376\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:1880/classify",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "1880",
+          "path": [
+            "classify"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Deploy Function",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/plain"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: azure-test-function\n  annotations:\n    trigger: \"http\"\n    totalDailyInvocations: \"1984364\"\nspec:\n  replicas: 2\n  selector:\n    matchLabels:\n      app: test\n  template:\n    metadata:\n      labels:\n        app: test\n    spec:\n      containers:\n      - name: main\n        image: nginx:latest",
+          "options": {
+            "raw": {
+              "language": "text"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:1880/deploy-function",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "1880",
+          "path": [
+            "deploy-function"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
