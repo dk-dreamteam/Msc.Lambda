@@ -662,7 +662,7 @@
         "id": "52b86de4eae91821",
         "type": "yaml",
         "z": "96b9cec355a795e1",
-        "property": "kube_object",
+        "property": "payload",
         "name": "",
         "x": 1030,
         "y": 1160,
