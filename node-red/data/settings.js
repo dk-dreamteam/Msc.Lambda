@@ -510,7 +510,14 @@ module.exports = {
      *    global.get("os")
      */
     functionGlobalContext: {
-        AWS: require('aws-sdk'),
+        // Safely attempt to load AWS SDK without crashing if missing
+        AWS: (() => {
+            try {
+                return require('aws-sdk');
+            } catch (e) {
+                return undefined; 
+            }
+        })()
     },
 
     /** The maximum number of messages nodes will buffer internally as part of their
